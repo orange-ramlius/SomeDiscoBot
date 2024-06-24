@@ -1,1 +1,1 @@
-gsfgs
+print("hello world")
