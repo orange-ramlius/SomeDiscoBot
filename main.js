@@ -1,13 +1,13 @@
 ﻿import { REST, Routes } from 'discord.js';
 import dotenv from 'dotenv';
 import greeting from './greeting.js';
- 
+
 dotenv.config();
 
 /*
     TASKS:
     1. Каждую функцию бота писать в новом файле.
-    2. Создать файл после запуска которого, бот пишет сообщение в канале (например: Ограниченный по времени конкурс. 
+    2. Создать файл после запуска которого, бот пишет сообщение в канале (например: Ограниченный по времени конкурс.
                                                                             После конкурса вывести имя победителя в новом сообщении)
     3. Добавить комментарии в коде, чтобы хоть что-то понятно было, ну камон.
 */
@@ -75,10 +75,6 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-function randNum() {
-    return Math.floor(Math.random() * 10);
-}
-
 import { ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 
 client.on('interactionCreate', async (interaction) => {
@@ -89,7 +85,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     if (interaction.commandName === 'rand') {
-        await interaction.reply(`${randNum()}`);
+        await rand(interaction);
     }
 
     if (interaction.commandName === 'wakeup') {
@@ -108,7 +104,7 @@ client.on('interactionCreate', async (interaction) => {
                 new ButtonBuilder()
                 .setCustomId('pingnotme')
                 .setLabel('Ping not me')
-                .setStyle(ButtonStyle.Danger)             
+                .setStyle(ButtonStyle.Danger)
         )
 
         const response = await interaction.reply({
@@ -131,7 +127,7 @@ client.on('interactionCreate', async (interaction) => {
             else if (confirmation.customId === 'pingnotme') {
 		        await confirmation.update({ content: `<@${Ertayid}>`, components: [] });
             }
-        } 
+        }
         catch (e) {
 	        await interaction.editReply({ content: `Time is over`, components: [] });
         }
@@ -153,7 +149,7 @@ client.on('interactionCreate', async (interaction) => {
             components: [row],
         });
 
-        const collectorFilter = i => i.user.id === interaction.user.id; 
+        const collectorFilter = i => i.user.id === interaction.user.id;
 
         try {
 	        const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 10_000 });
