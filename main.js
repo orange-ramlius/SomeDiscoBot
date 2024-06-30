@@ -1,7 +1,7 @@
 ﻿import { REST, Routes, Client, GatewayIntentBits} from 'discord.js';
 import dotenv from 'dotenv';
 import greeting from './greeting.js';
-import {roles, addRoles} from './roles.js'
+import {roles, changeRoles} from './roles.js'
 
 dotenv.config();
 
@@ -62,7 +62,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     if (interaction.commandName === 'changeroles') {
-        await addRoles(interaction, client);
+        await changeRoles(interaction, client);
     }
 })
 

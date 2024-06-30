@@ -9,7 +9,11 @@ export async function roles(interaction, client) {
     let loopRole;
     
     roles.forEach((role) => {
-        loopRole = guild.roles.cache.find(role2 => role2.name === role.trim()).toString();
+        try {
+            loopRole = guild.roles.cache.find(role2 => role2.name === role.trim()).toString(); 
+        }                                                                                      
+        catch (e) { return; }
+
         row.addComponents(
             new ButtonBuilder()
                 .setCustomId(loopRole.slice(3, loopRole.length - 1))
@@ -22,7 +26,7 @@ export async function roles(interaction, client) {
 
     try {
         const response = await interaction.reply({
-            content: `Выберите роль, которую хотите получить`,
+            content: `Выберите роль, которую хотите получить или удалить повторным нажатием`,
             components: [row],
         });  
 
@@ -34,7 +38,8 @@ export async function roles(interaction, client) {
             await confirmation.update({ content: `Роль была добавлена`, components: [] });
         }
         else {
-            await confirmation.update({ content: `Вы и так владеете этой ролью`, components: [] });
+            await interaction.member.roles.remove(role);
+            await confirmation.update({ content: `Роль была удалена`, components: [] });
         }
 
     } catch(e) { 
