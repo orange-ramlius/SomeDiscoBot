@@ -1,2 +1,0 @@
-# SomeDiscoBot
-some discord bot
