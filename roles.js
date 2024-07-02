@@ -18,7 +18,7 @@ export async function roles(interaction, client) {
             new ButtonBuilder()
                 .setCustomId(loopRole.slice(3, loopRole.length - 1))
                 .setLabel(role.trim())
-                .setStyle(ButtonStyle.Primary)
+                .setStyle(ButtonStyle.Secondary)
         )
     });
 
@@ -31,7 +31,7 @@ export async function roles(interaction, client) {
         });  
 
         const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });       
-        const role = interaction.guild.roles.cache.get(confirmation.customId);
+        const role = await interaction.guild.roles.cache.get(confirmation.customId);
 
         if (!interaction.member.roles.cache.has(confirmation.customId)) {
             await interaction.member.roles.add(role);
@@ -62,7 +62,7 @@ export async function changeRoles(interaction) {
 
     const collectorFilter = i => i.user.id === interaction.user.id;
     try {
-        const sumbitted = await interaction.awaitModalSubmit({ filter: collectorFilter, time: 60_000 });
+        const sumbitted = await interaction.awaitModalSubmit({ filter: collectorFilter, time: 600_000 });
 
         if (sumbitted) {
             await sumbitted.reply('Роли успешно перезаписаны');
@@ -70,6 +70,6 @@ export async function changeRoles(interaction) {
             fs.writeFileSync('roles.txt', text);
         }
     } catch(e) {
-        interaction.reply('Время на перезапись вышло');
+        return;
     }
 }

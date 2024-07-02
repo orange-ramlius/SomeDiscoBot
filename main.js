@@ -1,30 +1,41 @@
-﻿import { REST, Routes, Client, GatewayIntentBits} from 'discord.js';
+﻿import { REST, Routes, Client, GatewayIntentBits, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import dotenv from 'dotenv';
 import greeting from './greeting.js';
+import testmenu from './menu.js';
+import clear from './clear.js';
 import {roles, changeRoles} from './roles.js'
 
 dotenv.config();
 
 const commands = [
-    {
-        name: 'greeting',
-        description: 'greets you',
-    },
-    {
-        name: 'roles',
-        description: 'roles',
-    },
-    {
-        name: 'lottery',
-        description: 'raffle prizes',
-    },
-    {
-        name: 'changeroles',
-        description: 'rewriting roles in a file',
-    }
+    new SlashCommandBuilder()
+        .setName('greeting')
+        .setDescription('Приветствие'),
+
+    new SlashCommandBuilder()
+        .setName('roles')
+        .setDescription('Получение ролей по кнопке'),
+
+    new SlashCommandBuilder()
+        .setName('lottery')
+        .setDescription('Розыгрыш призов'),
+
+    new SlashCommandBuilder()
+        .setName('changeroles')
+        .setDescription('Перезапись ролей в файле'),
+
+    new SlashCommandBuilder()
+        .setName('menu')
+        .setDescription('Заполнение заявки в стафф'),
+
+    new SlashCommandBuilder()
+        .setName('clear')
+        .setDescription('Удаление сообщений')
+        .addIntegerOption(option => option.setName('amount').setDescription('Количество сообщений для удаления').setMinValue(1).setMaxValue(100).setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 ];
 
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+const rest = new REST().setToken(process.env.TOKEN);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
 
 (async () => {
@@ -63,6 +74,14 @@ client.on('interactionCreate', async (interaction) => {
 
     if (interaction.commandName === 'changeroles') {
         await changeRoles(interaction, client);
+    }
+
+    if (interaction.commandName === 'menu') {
+        await testmenu(interaction);
+    }
+
+    if (interaction.commandName === 'clear') {
+        await clear(interaction);
     }
 })
 
