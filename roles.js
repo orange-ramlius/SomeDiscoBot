@@ -1,16 +1,15 @@
 import { ButtonBuilder, ButtonStyle, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder } from 'discord.js';
 import fs from 'node:fs';
 
-export async function roles(interaction, client) {
+export async function roles(interaction) {
 
     const row = new ActionRowBuilder();
-    const guild = client.guilds.cache.get(process.env.SERVER_ID);
     const roles = fs.readFileSync('roles.txt', 'utf8').split('\n');
     let loopRole;
     
     roles.forEach((role) => {
         try {
-            loopRole = guild.roles.cache.find(role2 => role2.name === role.trim()).toString();
+            loopRole = interaction.guild.roles.cache.find(role2 => role2.name === role.trim()).toString();
         }                                                                                      
         catch (e) { console.log('че-то не так с loopRole в roles.js') }
 

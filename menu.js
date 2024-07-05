@@ -54,9 +54,8 @@ export default async function testmenu(interaction, client) {
 
             const collectorFilter = i => i.user.id === interaction.user.id;
             try {
-                const guild = await client.guilds.cache.get(process.env.SERVER_ID);
                 const sumbitted = await i.awaitModalSubmit({ filter: collectorFilter, time: 600_000 });
-                let generalText = `Заявка от ${guild.members.cache.get(interaction.user.id)}\n\n`;
+                let generalText = `Заявка от ${interaction.guild.members.cache.get(interaction.user.id)}\n\n`;
                 
                 try {
                     inputTexts.forEach (text => {

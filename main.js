@@ -36,22 +36,22 @@ const commands = [
     new SlashCommandBuilder()
         .setName('ban')
         .setDescription('Бан участника')
-        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .addUserOption(option => option.setName('user').setDescription('Пользователь, который будет забанен').setRequired(true))
-        .addStringOption(option => option.setName('reason').setDescription('Причина бана').setRequired(true)),
+        .addStringOption(option => option.setName('reason').setDescription('Причина бана').setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
 
     new SlashCommandBuilder()
         .setName('unban')
-        .setDescription('Разбан участника')
-        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-        .addStringOption(option => option.setName('userid').setDescription('Айди пользователя, который будет разбанен').setRequired(true)),
+        .setDescription('Разбан участника')    
+        .addStringOption(option => option.setName('userid').setDescription('Айди пользователя, который будет разбанен').setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
 
     new SlashCommandBuilder()
         .setName('kick')
         .setDescription('Кик участника')
-        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .addUserOption(option => option.setName('user').setDescription('Пользователь, который будет кикнут').setRequired(true))
-        .addStringOption(option => option.setName('reason').setDescription('Причина кика').setRequired(true)), 
+        .addStringOption(option => option.setName('reason').setDescription('Причина кика').setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
 ];
 
 const rest = new REST().setToken(process.env.TOKEN);
@@ -80,7 +80,7 @@ client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'roles') {
-        await roles(interaction, client);
+        await roles(interaction);
     }
 
     if (interaction.commandName === 'lottery') {
@@ -88,7 +88,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     if (interaction.commandName === 'changeroles') {
-        await changeRoles(interaction, client);
+        await changeRoles(interaction);
     }
 
     if (interaction.commandName === 'menu') {
