@@ -1,38 +1,57 @@
 ﻿import { REST, Routes, Client, GatewayIntentBits, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import dotenv from 'dotenv';
-import greeting from './greeting.js';
 import testmenu from './menu.js';
-import clear from './clear.js';
-import {roles, changeRoles} from './roles.js'
+import { clear, ban, unban, kick } from './administrative.js';
+import { roles, changeRoles } from './roles.js'
 
 dotenv.config();
 
 const commands = [
     new SlashCommandBuilder()
-        .setName('greeting')
-        .setDescription('Приветствие'),
-
-    new SlashCommandBuilder()
         .setName('roles')
-        .setDescription('Получение ролей по кнопке'),
+        .setDescription('Получение ролей по кнопке')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     new SlashCommandBuilder()
         .setName('lottery')
-        .setDescription('Розыгрыш призов'),
+        .setDescription('Розыгрыш призов')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     new SlashCommandBuilder()
         .setName('changeroles')
-        .setDescription('Перезапись ролей в файле'),
+        .setDescription('Перезапись ролей в файле')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
 
     new SlashCommandBuilder()
         .setName('menu')
-        .setDescription('Заполнение заявки в стафф'),
+        .setDescription('Заполнение заявки в стафф')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     new SlashCommandBuilder()
         .setName('clear')
         .setDescription('Удаление сообщений')
         .addIntegerOption(option => option.setName('amount').setDescription('Количество сообщений для удаления').setMinValue(1).setMaxValue(100).setRequired(true))
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+    
+    new SlashCommandBuilder()
+        .setName('ban')
+        .setDescription('Бан участника')
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+        .addUserOption(option => option.setName('user').setDescription('Пользователь, который будет забанен').setRequired(true))
+        .addStringOption(option => option.setName('reason').setDescription('Причина бана').setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('unban')
+        .setDescription('Разбан участника')
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+        .addStringOption(option => option.setName('userid').setDescription('Айди пользователя, который будет разбанен').setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('kick')
+        .setDescription('Кик участника')
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+        .addUserOption(option => option.setName('user').setDescription('Пользователь, который будет кикнут').setRequired(true))
+        .addStringOption(option => option.setName('reason').setDescription('Причина кика').setRequired(true)), 
 ];
 
 const rest = new REST().setToken(process.env.TOKEN);
@@ -60,10 +79,6 @@ client.on('ready', () => {
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === 'greeting') {
-        await greeting(interaction);
-    }
-
     if (interaction.commandName === 'roles') {
         await roles(interaction, client);
     }
@@ -77,11 +92,23 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     if (interaction.commandName === 'menu') {
-        await testmenu(interaction);
+        await testmenu(interaction, client);
     }
 
     if (interaction.commandName === 'clear') {
         await clear(interaction);
+    }
+
+    if (interaction.commandName === 'ban') {
+        await ban(interaction);
+    }
+
+    if (interaction.commandName === 'unban') {
+        await unban(interaction);
+    }
+
+    if (interaction.commandName === 'kick') {
+        await kick(interaction);
     }
 })
 
